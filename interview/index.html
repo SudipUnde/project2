@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment</title>
+    <style>
+        .grid-cont {
+            display: grid;
+        }
+
+        header {
+            width: 100%;
+            text-align: center;
+            background-color: blueviolet;
+        }
+
+        .nav {
+            width: 200px;
+            height: 75vh;
+            background-color: aqua;
+        }
+
+        li {
+            color: white;
+            display: black;
+            padding: 10px 5px;
+        }
+
+        .content {
+            margin: 20px;
+        }
+
+        .main {
+            display: grid;
+            grid-template-columns: 25% 75%;
+        }
+
+        footer {
+            width: 100%;
+            height: 50px;
+            background-color: blueviolet;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+    <script>
+        function adduser() {
+            const userList = JSON.parse(localStorage.getItem('userList') || '[]');
+            const userName = document.getElementById('name').value;
+            const address = document.getElementById('address').value;
+            const abbr = document.getElementById('abbr').value;
+            const email = document.getElementById('email').value;
+            const area = document.querySelector('input[name=area]:checked').value;
+            const married = document.getElementById('married').value || 'No';
+            console.log(abbr, area, married)
+            if (!userName || !address || !abbr || !area || !email) {
+                alert('please fill all values');
+                return;
+            }
+            userList.push({
+                name: userName, address: address, abbr: abbr, area: area, married: married, email: email
+            })
+            localStorage.setItem('userList', JSON.stringify(userList));
+            console.log('userList', userList);
+            alert('Record saved succesfully!');
+
+        }
+        function backToHome() {
+            document.getElementById("home").classList.remove('hidden')
+            document.getElementById("add-record").classList.add('hidden')
+            document.getElementById("view-record").classList.add('hidden')
+        }
+        function addRecord() {
+            document.getElementById("home").classList.add('hidden')
+            document.getElementById("add-record").classList.remove('hidden')
+            document.getElementById("view-record").classList.add('hidden')
+        }
+        function viewList() {
+            document.getElementById("home").classList.add('hidden')
+            document.getElementById("add-record").classList.add('hidden')
+            document.getElementById("view-record").classList.remove('hidden')
+            const userList = JSON.parse(localStorage.getItem('userList') || '[]');
+            const tableBody = document.getElementById('userList');
+            tableBody.innerHTML = ""
+            userList.forEach(user => {
+                const row = document.createElement('tr');
+                const name = document.createElement('td');
+                name.innerHTML = user.name;
+                const address = document.createElement('td');
+                address.innerHTML = user.address;
+                const abbr = document.createElement('td');
+                abbr.innerHTML = user.abbr;
+                const area = document.createElement('td');
+                area.innerHTML = user.area;
+                const married = document.createElement('td');
+                married.innerHTML = user.married;
+                const email = document.createElement('td');
+                email.innerHTML = user.email;
+
+                row.appendChild(abbr);
+                row.appendChild(name);
+                row.appendChild(email);
+                row.appendChild(married);
+                row.appendChild(area);
+                row.appendChild(address);
+
+                tableBody.appendChild(row)
+            })
+        }
+    </script>
+</head>
+
+<body>
+    <div class="grid-cont">
+        <header>
+            <h2>Assignment</h2>
+        </header>
+    </div>
+    <div class="main">
+        <nav class="nav">
+            <ul>
+                <li>
+                    <a href="#" onclick="addRecord()">add</a>
+                </li>
+                <li>
+                    <a href="#" onclick="viewList()">view</a>
+                </li>
+            </ul>
+        </nav>
+        <section class="content">
+            <div id="home">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris imperdiet vulputate arcu ut ullamcorper.
+                Vivamus ac ultricies ante. Etiam sit amet tortor sit amet ipsum fermentum viverra. Sed vitae mauris
+                gravida, volutpat dui sed, suscipit nunc. Etiam gravida semper semper. Nulla facilisi. Nulla sed nulla
+                at dui imperdiet placerat ut in sapien. Quisque commodo mattis tortor, ut ornare justo lacinia quis.
+            </div>
+            <div id="add-record" class="hidden">
+                <h3>Add new User</h3>
+                <form>
+                    <label for="name">Name</label><br>
+                    <select name="abbr" id="abbr">
+                        <option value="Mr">Mr</option>
+                        <option value="Mrs">Mrs</option>
+                        <option value="Miss">Miss</option>
+                    </select>
+
+                    <input type="text" id="name" name="name"><br><br>
+
+                    <label>Area</label><br>
+                    <input type="radio" name="area" value="Rural">
+                    <label>Rurel</label><br>
+
+                    <input type="radio" name="area" value="urban">
+                    <label>Urban</label><br><br>
+
+                    <label>Married? :</label>
+                    <input type="checkbox" name="married" value="yes" id="married"><br><br>
+
+                    <label for="email">Email</label><br>
+                    <input type="text" id="email" name="email"><br>
+
+                    <label for="name">Address</label><br>
+                    <textarea name="address" id="address" rows="10" cols="30"></textarea><br>
+
+                    <button onclick="adduser()">Save</button>
+                    <button type="reset">Reset</button>
+                </form>
+            </div>
+            <div id="view-record" class="viewRecord hidden">
+                <a href="#" onclick="backToHome()">BackToHome</a>
+                <h3>All User List</h3>
+                <table border="1">
+                    <thead>
+                        <th>Abbr</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Married</th>
+                        <th>Area</th>
+                        <th>Address</th>
+                    </thead>
+                    <tbody id="userList">
+                    </tbody>
+                    </thead>
+                </table>
+            </div>
+
+        </section>
+    </div>
+    <div>
+        <footer>
+            <p> &copy SpringCT</p>
+        </footer>
+    </div>
+</body>
+
+</html>
